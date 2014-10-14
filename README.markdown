@@ -1,4 +1,22 @@
-# memcached session manager
+# memcached session manager - High Availability Options
+
+## High Availability Options:
+Project based on Magro's Memcached Session Manager, but considering we the Lifecycle of the Application detached from the Session Distribution functionality, therefore the features to implement are as follow:
+
+- High Availability on Client-Side:
+We should provide several configuration options for number of retries, timeouts, etc.
+	* If Cluster connectivity is lost, fall back to using Near Cache / Local storage
+	* If Cluster data becomes corrupt or any error is detected, fall back to using Near Cache / Local storage
+	* Retries/Reconnect mechanisms
+	* If Reconnection is achieved, dump all Near Cache / Local storage and start using Distribution as if new
+
+- Serialization High Availability:
+We should provide several configuration options in this scenario
+	* If Serialization of an attribute fails, tag session as Local and don't try to Distribute it, keep trying with other sessions. Log Warning.
+	* If Serialization of an attribute fails, stop Serialization and Distribution completely. Log Warning.
+	* If Serialization of an attribute fails, stop Application with Error (default behavior)
+	* If Serialization of an attribute fails, save and log Black List of non-serializable attributes and leave attribute as null. Distribute rest of the Session. 
+
 
 [![Build Status](https://jenkins.inoio.de/job/memcached-session-manager%20master/badge/icon)](https://jenkins.inoio.de/job/memcached-session-manager%20master/)
 
